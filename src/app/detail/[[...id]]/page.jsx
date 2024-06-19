@@ -98,7 +98,7 @@ const Page = ({ params }) => {
               <div>
                 <h1>
                   Status 426 hatası, newsapi.org adresinden alınan verilerin
-                  ödeme sistemi ücretsiz olduğunda sadece localhost için CORS
+                  ödeme sistemi ücretsiz olanı kullandığımdan sadece localhost için CORS
                   etkinleştirilmiş olmasından kaynaklanmaktadır. Bu nedenle
                   haberler sadece yerel ortamda (localhost) erişilebilirken,
                   canlı (production) ortamda erişim sağlanamamaktadır.

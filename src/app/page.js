@@ -200,7 +200,7 @@ const Home = () => {
           {
             newsStatus === 426 && (
               <div className={styles.Status426}>
-                <h2 className={styles.Status426h2}>Status 426 hatası, newsapi.org adresinden alınan verilerin ödeme sistemi ücretsiz olduğunda sadece localhost için CORS etkinleştirilmiş olmasından kaynaklanmaktadır. Bu nedenle haberler sadece yerel ortamda (localhost) erişilebilirken, canlı (production) ortamda erişim sağlanamamaktadır.</h2>
+                <h2 className={styles.Status426h2}>Status 426 hatası, newsapi.org adresinden alınan verilerin ödeme sistemi ücretsiz olanı kullandığımdan sadece localhost için CORS etkinleştirilmiş olmasından kaynaklanmaktadır. Bu nedenle haberler sadece yerel ortamda (localhost) erişilebilirken, canlı (production) ortamda erişim sağlanamamaktadır.</h2>
               </div>
             )
           }
