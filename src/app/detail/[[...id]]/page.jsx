@@ -89,12 +89,12 @@ const Page = ({ params }) => {
                   Description={e.description}
                 />
               ))}
-            {status === 429 && (
+            {newsStatus === 429 && (
               <div>
                 <h1>Limit Aşıldı</h1>
               </div>
             )}
-            {status === 426 && (
+            {newsStatus === 426 && (
               <div>
                 <h1>
                   Status 426 hatası, newsapi.org adresinden alınan verilerin
@@ -105,7 +105,7 @@ const Page = ({ params }) => {
                 </h1>
               </div>
             )}
-            {status === 500 && (
+            {newsStatus === 500 && (
               <div>
                 <h1>beklenmeyen bir sorunla karşılaşıldı</h1>
               </div>
