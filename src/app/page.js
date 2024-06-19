@@ -1,95 +1,220 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+import React, { useState, useEffect } from 'react';
+import { FaSearch, FaBitcoin } from "react-icons/fa"; //Icon Kütüphanesi
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+import styles from './page.module.css';
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+import useCoinData from '@/hooks/useGet';
+import useNewsData from '@/hooks/useNewsGet';
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+import Header from '@/components/Header/Header';
+import CoinListBar from '@/components/CoinList/CoinListBar/CoinListBar';
+import CoinListCard from '@/components/CoinList/CoinListCard/CoinListCard';
+import Pagination from '@/components/Pagination/Pagination';
+import DashboardCard from '@/components/DashboardCard/DashboardCard';
+import HomeNewsCard from '@/components/HomeNewsCard/HomeNewsCard';
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
+const Home = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: initialData, error, loading, status } = useCoinData(currentPage);
+  const { newsData, newsError, newsLoading, newsStatus } = useNewsData('crypto');
+  const [data, setData] = useState([]);
+  const [searchName, setSearchName] = useState("");
+  const [sortConfig, setSortConfig] = useState({
+    key: "name",
+    direction: "ascending",
+  });
+  const [favorites, setFavorites] = useState([]);
+  const totalPages = 148;
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+  // Favorileri localStorage'dan yükler
+  useEffect(() => {
+    const savedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    setFavorites(savedFavorites);
+  }, []);
+
+  // Initial data yüklendiğinde data state'ini güncelle
+  useEffect(() => {
+    if (initialData) {
+      setData(initialData);
+    }
+  }, [initialData]);
+
+  // Favoriler her güncellendiğinde localStorage'e kaydet
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
+  // Veriyi anahtar (key) ve yöne göre sıralama
+  const sortData = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+
+    const sortedData = [...data].sort((a, b) => {
+      if (a[key] < b[key]) {
+        return direction === "ascending" ? -1 : 1;
+      }
+      if (a[key] > b[key]) {
+        return direction === "ascending" ? 1 : -1;
+      }
+      return 0;
+    });
+
+    setData(sortedData);
+    setSortConfig({ key, direction });
+  };
+
+  // Veriyi isim ile filtreleme
+  const filterData = data?.filter((item) =>
+    item.name.toLowerCase().includes(searchName.toLowerCase())
   );
-}
+
+  // Sayfa değiştiğinde currentPage state'ini güncelle
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  // Favori ekleme işlevi
+  const handleAddFavorite = (coin) => {
+    const newFavorite = {
+      id: coin.id,
+      name: coin.name,
+      price1h: coin.price_change_percentage_1h_in_currency,
+      price24h: coin.price_change_percentage_24h_in_currency,
+      price7d: coin.price_change_percentage_7d_in_currency,
+    };
+
+    if (!favorites.some(fav => fav.id === newFavorite.id)) {
+      const newFavorites = [...favorites, newFavorite];
+      setFavorites(newFavorites);
+    }
+  };
+
+  // Favori kaldırma işlevi
+  const handleRemoveFavorite = (id) => {
+    const updatedFavorites = favorites.filter(fav => fav.id !== id);
+    setFavorites(updatedFavorites);
+  };
+
+  const isFavorite = (id) => {
+    return favorites.some(fav => fav.id === id);
+  };
+
+  return (
+    <>
+      <Header>
+        <FaBitcoin size={65} />
+      </Header>
+      <div className={styles.HomeContainer}>
+        <div className={styles.CoinListAllContainer}>
+          <div className={styles.CoinListFilterInputContainer}>
+            <FaSearch color='#0070f3' />
+            <input
+              type="text"
+              placeholder="Search"
+              className={styles.CoinListFilterInput}
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+            />
+          </div>
+          <CoinListBar onSort={sortData} />
+          {status === 200 && (
+            filterData?.map((item) => (
+              <CoinListCard
+                id={item.id}
+                key={item.id}
+                image={item.image}
+                name={item.name}
+                current_price={item.current_price}
+                price_change_24h={item.price_change_24h}
+                total_volume={item.total_volume}
+                isFavorite={isFavorite(item.id)}
+                onClick={() => isFavorite(item.id) ? handleRemoveFavorite(item.id) : handleAddFavorite(item)}
+              />
+            )))}
+          {
+            status === 429 && (
+              <div>
+                <h1>Limit Aşıldı</h1>
+              </div>
+            )
+          }
+          {
+            status === 500 && (
+              <div>
+                <h1>beklenmeyen bir sorunla karşılaşıldı</h1>
+              </div>
+            )
+          }
+          <div>
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        </div>
+
+        <div className={styles.DashboardAllContainer}>
+          <h2>Dashboard</h2>
+          {favorites.map(fav => (
+            <DashboardCard
+              id={fav.id}
+              key={fav.id}
+              name={fav.name}
+              onClick={() => handleRemoveFavorite(fav.id)}
+              price1h={fav.price1h}
+              price24h={fav.price24h}
+              price7d={fav.price7d}
+            />
+          ))}
+        </div>
+
+        <div className={styles.HomeNewsBarContainer}>
+          {newsStatus === 200 &&
+            newsData?.map((e, index) => {
+              return (
+                <HomeNewsCard
+                  key={index}
+                  srcImage={e.urlToImage}
+                  Title={e.title}
+                />
+
+              )
+            })
+          }
+          {
+            status === 429 && (
+              <div>
+                <h1>Limit Aşıldı</h1>
+              </div>
+            )
+          }
+          {
+            status === 426 && (
+              <div>
+                <h1>Status 426 hatası, newsapi.org adresinden alınan verilerin ödeme sistemi ücretsiz olduğunda sadece localhost için CORS etkinleştirilmiş olmasından kaynaklanmaktadır. Bu nedenle haberler sadece yerel ortamda (localhost) erişilebilirken, canlı (production) ortamda erişim sağlanamamaktadır.</h1>
+              </div>
+            )
+          }
+          {
+            status === 500 && (
+              <div>
+                <h1>beklenmeyen bir sorunla karşılaşıldı</h1>
+              </div>
+            )
+          }
+        </div>
+      </div >
+    </>
+  );
+};
+
+export default Home;

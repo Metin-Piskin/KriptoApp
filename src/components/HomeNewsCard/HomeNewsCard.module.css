@@ -1,0 +1,17 @@
+.HomeNewsCardContainer {
+    display: flex;
+    background-color: white;
+    align-items: center;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+}
+
+.HomeNewsCardTitle {
+    font-size: 14px;
+    white-space: normal;
+    padding-inline: 20px;
+    width: 250px;
+    color: #000;
+}

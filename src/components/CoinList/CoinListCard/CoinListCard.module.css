@@ -1,0 +1,45 @@
+.CoinListContainer {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: black; 
+}
+
+.CoinListStarButton {
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+.CoinListNameText {
+    flex: 1;
+    text-align: center;
+}
+
+.CoinListImage {
+    flex: 1;
+    object-fit: contain;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.CoinListPrice {
+    flex: 1;
+    text-align: center;
+}
+
+.CoinListDayPrice {
+    flex: 1;
+    text-align: center;
+}
+
+.CoinListVolume {
+    flex: 1;
+    text-align: center;
+}

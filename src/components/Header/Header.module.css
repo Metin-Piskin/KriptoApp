@@ -1,0 +1,7 @@
+.HeaderContainer {
+    display: flex;
+    padding-block: 25px;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}

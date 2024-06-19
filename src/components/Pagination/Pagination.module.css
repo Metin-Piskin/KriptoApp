@@ -1,0 +1,23 @@
+.PaginationContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.PaginationArrowButton{
+    display: flex;
+    padding: 10px;
+    border-radius: 50px;
+    border: 1px solid gray;
+    background-color: white;
+    cursor: pointer;
+}
+
+.PaginationPageNumButton{
+    margin-inline: 5px;
+    padding-inline: 15px;
+    padding-block: 10px;
+    border: 1px solid #dddddd;
+    cursor: pointer;
+    border-radius: 20px;
+}

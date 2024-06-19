@@ -1,0 +1,28 @@
+.CoinListBarContainer {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 15px;
+    margin-inline: -15px;
+    padding-block: 15px;
+    padding-left: 30px;
+    padding-right: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+}
+
+.CoinListStarBarButtons {
+    background-color: transparent;
+    border: 0;
+}
+
+.CoinListBarButtons {
+    cursor: pointer;
+    background-color: transparent;
+    border: 0;
+    font-size: medium;
+    flex: 1;
+    
+
+}

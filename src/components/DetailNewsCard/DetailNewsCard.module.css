@@ -1,0 +1,15 @@
+.DetailNewsCardContainer {
+    background-color: white;
+    width: 45%;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+}
+
+.DetailNewsCardImage {
+    border-radius: 999px;
+    margin-right: 15px;
+}
